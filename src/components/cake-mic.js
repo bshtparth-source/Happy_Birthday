@@ -6,6 +6,7 @@ import {
   MIC_LOW_FREQ_CUTOFF_HZ,
   MIC_MIN_RMS_THRESHOLD,
   MIC_BASELINE_MULTIPLIER,
+  MIC_MAX_BASELINE_CAP,
   MIC_LOW_RATIO_START,
   MIC_LOW_RATIO_KEEP,
   MIC_BLOW_FILL_RATE,
@@ -139,24 +140,59 @@ export function init(root, config, { onBlow, onBlowStrength, onMicStart, onMicSt
       // Duck music so speaker audio cannot bleed into microphone
       if (onMicStart) onMicStart();
 
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: false,
-          autoGainControl: false,
-          channelCount: 1,
-        },
-        video: false,
-      });
+      // Ensure AudioContext is instantiated or resumed synchronously during the user click token
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!audioCtx || audioCtx.state === 'closed') {
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+
+      // Try preferred constraints: echoCancellation: false preserves raw breath turbulence (< 250 Hz) and AGC provides sufficient gain
+      let userStream;
+      try {
+        userStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: true,
+          },
+          video: false,
+        });
+      } catch (err) {
+        // If permission was denied, do not retry alternate constraints
+        const isDenied =
+          err?.name === 'NotAllowedError' ||
+          err?.name === 'PermissionDeniedError' ||
+          (err?.message && err.message.toLowerCase().includes('denied'));
+        if (isDenied) {
+          throw err;
+        }
+
+        try {
+          userStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: false,
+              autoGainControl: false,
+              channelCount: 1,
+            },
+            video: false,
+          });
+        } catch {
+          userStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        }
+      }
 
       // Guard against user clicking cancel during the permission dialog
       if (!isStarting) {
-        stream.getTracks().forEach((t) => t.stop());
+        if (userStream) userStream.getTracks().forEach((t) => t.stop());
         return;
       }
 
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      audioCtx = new AudioContextClass();
+      stream = userStream;
+
       if (audioCtx.state === 'suspended') {
         await audioCtx.resume();
       }
@@ -179,12 +215,15 @@ export function init(root, config, { onBlow, onBlowStrength, onMicStart, onMicSt
       calibrationSamples = [];
       blowStrength = 0;
       lastBlowTime = 0;
-      setStatus('Listening… Preparing microphone 🌬️', true);
+      setStatus('Listening… stay quiet for a moment 🤫', true);
 
       const timeDomainData = new Float32Array(analyser.fftSize);
       const freqData = new Uint8Array(analyser.frequencyBinCount);
       const binWidth = audioCtx.sampleRate / analyser.fftSize;
-      const cutoffBin = Math.max(1, Math.floor(MIC_LOW_FREQ_CUTOFF_HZ / binWidth));
+      const cutoffBin = Math.max(
+        1,
+        Math.min(Math.floor(MIC_LOW_FREQ_CUTOFF_HZ / binWidth), freqData.length - 1)
+      );
 
       function processAudioFrame(now) {
         if (!listening || !analyser) return;
@@ -193,27 +232,44 @@ export function init(root, config, { onBlow, onBlowStrength, onMicStart, onMicSt
         lastFrameTime = now;
         const elapsed = now - startTime;
 
-        analyser.getFloatTimeDomainData(timeDomainData);
+        if (typeof analyser.getFloatTimeDomainData === 'function') {
+          analyser.getFloatTimeDomainData(timeDomainData);
+        } else {
+          const byteData = new Uint8Array(analyser.fftSize);
+          analyser.getByteTimeDomainData(byteData);
+          for (let i = 0; i < byteData.length; i++) {
+            timeDomainData[i] = (byteData[i] - 128) / 128;
+          }
+        }
         analyser.getByteFrequencyData(freqData);
 
-        // 1. Calculate acoustic RMS (Root Mean Square)
+        // 1. Calculate acoustic RMS (Root Mean Square) with DC offset cancellation
+        let sum = 0;
+        for (let i = 0; i < timeDomainData.length; i++) {
+          sum += timeDomainData[i];
+        }
+        const mean = sum / timeDomainData.length;
+
         let sumSquares = 0;
         for (let i = 0; i < timeDomainData.length; i++) {
-          const val = timeDomainData[i];
-          sumSquares += val * val;
+          const diff = timeDomainData[i] - mean;
+          sumSquares += diff * diff;
         }
         const rms = Math.sqrt(sumSquares / timeDomainData.length);
 
-        // 2. Calculate low-frequency vs total energy ratio
+        // 2. Calculate low-frequency vs high-frequency average power density ratio
         let lowEnergy = 0;
-        for (let i = 1; i <= cutoffBin && i < freqData.length; i++) {
+        for (let i = 1; i <= cutoffBin; i++) {
           lowEnergy += freqData[i] * freqData[i];
         }
-        let totalEnergy = 0;
-        for (let i = 1; i < freqData.length; i++) {
-          totalEnergy += freqData[i] * freqData[i];
+        let highEnergy = 0;
+        for (let i = cutoffBin + 1; i < freqData.length; i++) {
+          highEnergy += freqData[i] * freqData[i];
         }
-        const lowRatio = totalEnergy > 0 ? lowEnergy / totalEnergy : 0;
+        const highBinsCount = Math.max(1, freqData.length - 1 - cutoffBin);
+        const avgLow = lowEnergy / cutoffBin;
+        const avgHigh = highEnergy / highBinsCount;
+        const lowRatio = avgLow + avgHigh > 0 ? avgLow / (avgLow + avgHigh) : 0;
 
         // Stage 1: Warmup phase (discard hardware activation transients)
         if (elapsed < MIC_WARMUP_MS) {
@@ -238,10 +294,13 @@ export function init(root, config, { onBlow, onBlowStrength, onMicStart, onMicSt
           if (calibrationSamples.length > 0) {
             calibrationSamples.sort((a, b) => a - b);
             const medianIndex = Math.floor(calibrationSamples.length / 2);
-            baselineRms = Math.max(0.005, calibrationSamples[medianIndex]);
+            baselineRms = Math.min(
+              MIC_MAX_BASELINE_CAP,
+              Math.max(0.003, calibrationSamples[medianIndex])
+            );
           }
           state = 'armed';
-          setStatus('Ready! Blow gently into your microphone 🌬️', true);
+          setStatus('Ready! Blow into your microphone 🌬️', true);
         }
 
         // Stage 3: Armed blow detection
@@ -259,13 +318,17 @@ export function init(root, config, { onBlow, onBlowStrength, onMicStart, onMicSt
           state = 'blowing';
           lastBlowTime = now;
           blowStrength = Math.min(1.0, blowStrength + MIC_BLOW_FILL_RATE * dt);
+          setStatus('Blowing detected! Keep blowing… 💨', true);
         } else {
           // Allow micro-gaps of turbulence dips under MIC_GAP_TOLERANCE_MS
           const timeSinceBlow = now - lastBlowTime;
           if (timeSinceBlow > MIC_GAP_TOLERANCE_MS) {
             blowStrength = Math.max(0.0, blowStrength - MIC_BLOW_DECAY_RATE * dt);
             if (blowStrength <= 0.05) {
-              state = 'armed';
+              if (state === 'blowing') {
+                state = 'armed';
+                setStatus('Ready! Blow into your microphone 🌬️', true);
+              }
             }
           }
         }

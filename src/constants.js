@@ -14,18 +14,19 @@ export const SCRATCH_BRUSH_RADIUS_MAX = 28;
 export const SCRATCH_CHECK_INTERVAL = 10;
 
 // Microphone blow detection parameters
-export const MIC_WARMUP_MS = 500; // Ignore initial audio frames to discard hardware switching transients
-export const MIC_CALIBRATION_MS = 1200; // Time spent measuring ambient baseline noise
-export const MIC_FFT_SIZE = 2048; // High frequency resolution for low-band breath turbulence analysis
-export const MIC_SMOOTHING = 0.3; // Temporal smoothing constant for analyser
-export const MIC_LOW_FREQ_CUTOFF_HZ = 850; // Low frequency cutoff for breath turbulence
-export const MIC_MIN_RMS_THRESHOLD = 0.035; // Absolute minimum RMS floor
-export const MIC_BASELINE_MULTIPLIER = 3.0; // Required RMS multiplier above ambient baseline
-export const MIC_LOW_RATIO_START = 0.62; // Low-frequency energy ratio required to start blow
-export const MIC_LOW_RATIO_KEEP = 0.46; // Low-frequency energy ratio required to sustain blow (hysteresis)
-export const MIC_BLOW_FILL_RATE = 2.8; // Blow strength units per second (~350ms of sustained blow)
-export const MIC_BLOW_DECAY_RATE = 2.0; // Blow strength decay rate per second when sound drops
-export const MIC_GAP_TOLERANCE_MS = 80; // Brief audio gap allowed without resetting blow streak
+export const MIC_WARMUP_MS = 250; // Fast initial warmup to discard switching transient
+export const MIC_CALIBRATION_MS = 750; // Swift 750ms ambient baseline measurement
+export const MIC_FFT_SIZE = 1024; // Fast FFT resolution (512 frequency bins)
+export const MIC_SMOOTHING = 0.25; // Responsive temporal smoothing
+export const MIC_LOW_FREQ_CUTOFF_HZ = 900; // Low frequency cutoff for breath turbulence
+export const MIC_MIN_RMS_THRESHOLD = 0.016; // Realistic minimum RMS for built-in laptop/phone microphones
+export const MIC_BASELINE_MULTIPLIER = 1.6; // Sensitive multiplier above measured ambient baseline
+export const MIC_MAX_BASELINE_CAP = 0.022; // Cap baseline so early blowing never locks the detector
+export const MIC_LOW_RATIO_START = 0.52; // Low-frequency ratio required to start (breath: 0.70-0.98, speech: 0.10-0.30)
+export const MIC_LOW_RATIO_KEEP = 0.42; // Hysteresis threshold to sustain blow
+export const MIC_BLOW_FILL_RATE = 3.2; // Requires ~310ms of sustained breath to extinguish
+export const MIC_BLOW_DECAY_RATE = 2.0; // Decay rate when breath ceases
+export const MIC_GAP_TOLERANCE_MS = 120; // Natural breath flutter tolerance
 
 // Petals particle count
 export const PETAL_COUNT_MOBILE = 12;

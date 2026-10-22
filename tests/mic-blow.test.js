@@ -425,6 +425,44 @@ describe('Microphone Blow Detection Test Suite', () => {
         mic.destroy();
       });
 
+      test('5b. Early blowing during calibration: baseline cap ensures candles still extinguish once armed', async () => {
+        let blown = false;
+        let isBlowing = true; // User begins blowing immediately upon clicking!
+
+        const generator = {
+          getTimeDomain: (arr) => {
+            if (isBlowing) {
+              for (let i = 0; i < arr.length; i++) {
+                arr[i] = (Math.random() - 0.5) * 0.16;
+              }
+            }
+          },
+          getFrequency: (arr) => {
+            arr.fill(0);
+            if (isBlowing) {
+              for (let i = 1; i <= 30; i++) arr[i] = 180;
+              for (let i = 31; i < arr.length; i++) arr[i] = 10;
+            }
+          },
+        };
+
+        const env = setupMockEnvironment(generator);
+        const mic = initCakeMic(env.root, {}, { onBlow: () => (blown = true) });
+
+        env.mockMicBtn.click();
+        await Promise.resolve();
+
+        // 1. Advance through warmup and calibration while blowing: must not blow during calibration
+        env.advanceTime(900);
+        assert.equal(blown, false, 'Must not extinguish during calibration window');
+
+        // 2. Continue blowing after calibration: baseline cap must ensure threshold is reachable
+        env.advanceTime(700);
+        assert.equal(blown, true, 'Early blowing must not prevent extinction once armed');
+
+        mic.destroy();
+      });
+
       test('6. Permission denied: shows friendly message without crashing', async () => {
         const env = setupMockEnvironment(null, { denyPermission: true });
         const mic = initCakeMic(env.root, {});
