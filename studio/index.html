@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Studio – Birthday Surprise</title>
+    <link rel="stylesheet" href="/studio/studio.css" />
+  </head>
+  <body>
+    <div class="studio-layout">
+      <header class="studio-header">
+        <div class="studio-title">
+          <span>✨ Birthday Surprise Studio</span>
+        </div>
+        <div class="studio-actions">
+          <button id="studio-discard-btn" class="studio-btn" type="button" disabled>
+            Discard Changes
+          </button>
+          <button
+            id="studio-save-btn"
+            class="studio-btn studio-btn--primary"
+            type="button"
+            disabled
+          >
+            Save & Publish
+          </button>
+        </div>
+      </header>
+
+      <div class="studio-main">
+        <!-- Left: Form Controls -->
+        <aside class="studio-pane-form">
+          <nav class="studio-tabs" role="tablist">
+            <button class="studio-tab studio-tab--active" data-panel="basics" type="button">
+              Basics
+            </button>
+            <button class="studio-tab" data-panel="photos" type="button">Photos</button>
+            <button class="studio-tab" data-panel="letter" type="button">Letter</button>
+            <button class="studio-tab" data-panel="reasons" type="button">Reasons</button>
+            <button class="studio-tab" data-panel="music" type="button">Music</button>
+            <button class="studio-tab" data-panel="checklist" type="button">Checklist</button>
+            <button class="studio-tab" data-panel="publish" type="button">Publish</button>
+          </nav>
+
+          <div id="studio-panel-container" class="studio-panel-content">
+            <!-- Active panel mounts here -->
+          </div>
+        </aside>
+
+        <!-- Right: Responsive Live Preview -->
+        <section class="studio-pane-preview">
+          <div class="preview-toolbar">
+            <div class="device-toggle">
+              <button class="device-btn device-btn--active" data-device="phone" type="button">
+                📱 Phone (390×844)
+              </button>
+              <button class="device-btn" data-device="tablet" type="button">
+                📱 Tablet (768×1024)
+              </button>
+              <button class="device-btn" data-device="desktop" type="button">💻 Fullscreen</button>
+            </div>
+            <div>
+              <select
+                id="jump-to-section"
+                class="form-input"
+                style="
+                  padding: 0.3rem 0.5rem;
+                  font-size: 0.8rem;
+                  width: auto;
+                  background: #334155;
+                  color: #fff;
+                  border-color: #475569;
+                "
+              >
+                <option value="">Jump to section…</option>
+                <option value="#hero-section">Hero & Milestones</option>
+                <option value="#cake-section">Make a Wish Cake</option>
+                <option value="#scratch-section">Scratch to Reveal</option>
+                <option value="#gallery-section">Scrapbook Memories</option>
+                <option value="#letter-section">Letter & Reasons</option>
+                <option value="#finale-section">Finale & Replay</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="preview-frame-wrap">
+            <iframe
+              id="preview-iframe"
+              class="preview-iframe preview-iframe--phone"
+              src="/?preview=1"
+              title="Live Preview"
+            ></iframe>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script type="module" src="/studio/studio.js"></script>
+  </body>
+</html>

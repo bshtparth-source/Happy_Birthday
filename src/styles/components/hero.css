@@ -1,0 +1,183 @@
+@layer components {
+  #hero-section {
+    gap: var(--space-3);
+    min-height: 100svh;
+    padding-block: var(--space-8);
+  }
+
+  .hero__bow {
+    width: 36px;
+    height: 36px;
+    color: var(--pink-400);
+    animation: ribbon-sway 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes ribbon-sway {
+    from {
+      transform: rotate(-5deg);
+    }
+    to {
+      transform: rotate(5deg);
+    }
+  }
+
+  .hero__name {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff5fa, var(--pink-300), var(--gold-300));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  .hero__age-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(254, 240, 138, 0.45);
+    box-shadow:
+      0 4px 20px rgba(244, 114, 182, 0.16),
+      inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius-full);
+    padding: 0.35rem 1.15rem;
+    color: var(--gold-300);
+    font-family: var(--font-body);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .hero__age-sparkle {
+    width: 14px;
+    height: 14px;
+    color: var(--gold-300);
+    flex-shrink: 0;
+    opacity: 0.95;
+  }
+
+  .hero__age-number {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(254, 240, 138, 0.6);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  .hero__age-label {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--gold-300);
+    line-height: 1;
+    display: inline-block;
+  }
+
+  /* Photo system */
+  .photo-frame {
+    position: relative;
+    margin-block: var(--space-4);
+  }
+
+  .photo-glow-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--pink-400),
+      var(--gold-300),
+      var(--lavender),
+      var(--rose),
+      var(--pink-400)
+    );
+    animation: ring-spin 6s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes ring-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .photo-img-wrap {
+    position: relative;
+    z-index: 1;
+    width: clamp(180px, 30svh, 280px);
+    height: clamp(180px, 30svh, 280px);
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--bg-plum);
+    border: 4px solid var(--bg-deep);
+    box-shadow: var(--shadow-card), var(--glow-pink);
+  }
+
+  .photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .photo-bow-accent {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 32px;
+    color: var(--pink-400);
+    z-index: 2;
+    animation: bow-bounce 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes bow-bounce {
+    from {
+      transform: translateX(-50%) translateY(0);
+    }
+    to {
+      transform: translateX(-50%) translateY(-6px);
+    }
+  }
+
+  .hero__subtitle {
+    max-width: 48ch;
+    font-size: 1.05rem;
+    color: var(--pink-100);
+    line-height: 1.6;
+  }
+
+  /* Scroll cue */
+  .scroll-cue {
+    margin-top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    opacity: 0.7;
+    animation: scroll-cue-bounce 2s ease-in-out infinite;
+  }
+
+  .scroll-cue svg {
+    width: 22px;
+    height: 22px;
+    color: var(--pink-300);
+  }
+
+  @keyframes scroll-cue-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(6px);
+    }
+  }
+}

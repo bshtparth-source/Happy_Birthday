@@ -1,0 +1,65 @@
+@layer tokens {
+  :root {
+    /* Color Palette */
+    --bg-deep: #11021d;
+    --bg-plum: #200533;
+    --surface-glass: rgba(255, 240, 248, 0.07);
+    --border-glass: rgba(251, 207, 232, 0.28);
+    --pink-500: #ec4899;
+    --pink-400: #f472b6;
+    --pink-300: #f9a8d4;
+    --pink-100: #fbcfe8;
+    --pink-50: #fdf2f8;
+    --gold-300: #fef08a;
+    --gold-400: #fde047;
+    --lavender: #d8b4fe;
+    --rose: #fb7185;
+    --text-primary: #fff5fa;
+    --text-secondary: rgba(255, 235, 245, 0.76);
+    --text-muted: rgba(255, 235, 245, 0.52);
+    --focus-ring: #f472b6;
+
+    /* Typography */
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-script: 'Great Vibes', cursive;
+
+    /* Fluid Typography Scale */
+    --text-h1: clamp(2.4rem, 8vw, 5.5rem);
+    --text-h2: clamp(1.9rem, 5vw, 3.25rem);
+    --text-h3: clamp(1.5rem, 4vw, 2.25rem);
+    --text-body: clamp(1rem, 2.5vw, 1.125rem);
+    --text-small: 0.875rem;
+    --text-eyebrow: 0.75rem;
+
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-section: clamp(4rem, 12vw, 8rem);
+
+    /* Radii */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --radius-full: 9999px;
+
+    /* Elevations & Glow */
+    --glow-pink: 0 0 30px rgba(244, 114, 182, 0.35);
+    --glow-gold: 0 0 20px rgba(254, 240, 138, 0.4);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+    /* Motion Curves */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast: 200ms;
+    --dur-med: 400ms;
+    --dur-slow: 800ms;
+  }
+}

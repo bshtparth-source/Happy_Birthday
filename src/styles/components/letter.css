@@ -1,0 +1,55 @@
+@layer components {
+  #letter-section {
+    gap: var(--space-8);
+  }
+
+  .letter-parchment {
+    width: 100%;
+    max-width: 65ch;
+    background: linear-gradient(145deg, rgba(255, 243, 250, 0.08), rgba(255, 240, 248, 0.04));
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: clamp(var(--space-8), 6vw, var(--space-12));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-card);
+    text-align: start;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .letter-bow {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-6);
+    width: 28px;
+    height: 28px;
+    color: var(--pink-400);
+    animation: bow-bounce 2s ease-in-out infinite alternate;
+  }
+
+  .letter-greeting {
+    font-family: var(--font-script);
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    color: var(--pink-300);
+    margin-block-end: var(--space-6);
+  }
+
+  .letter-body {
+    font-size: clamp(1rem, 2.5vw, 1.0625rem);
+    color: var(--text-primary);
+    line-height: 1.8;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-block-end: var(--space-6);
+  }
+
+  .letter-signoff {
+    font-family: var(--font-script);
+    font-size: clamp(1.3rem, 3.5vw, 1.75rem);
+    color: var(--pink-300);
+    line-height: 1.4;
+    text-wrap: balance;
+  }
+}

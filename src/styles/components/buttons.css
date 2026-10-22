@@ -1,0 +1,83 @@
+@layer components {
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-8);
+    background: linear-gradient(135deg, var(--pink-500), var(--rose));
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-full);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast);
+    box-shadow: var(--glow-pink);
+    min-height: 52px;
+    animation: btn-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes btn-pulse {
+    0%,
+    100% {
+      box-shadow: var(--glow-pink);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(244, 114, 182, 0.65);
+    }
+  }
+
+  .btn-pill:hover,
+  .btn-pill:focus-visible {
+    transform: scale(1.04);
+    box-shadow: 0 0 48px rgba(244, 114, 182, 0.55);
+  }
+
+  .btn-pill svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn-sub {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-6);
+    background: var(--surface-glass);
+    border: 1px solid var(--border-glass);
+    color: var(--text-secondary);
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    min-height: 44px;
+    transition:
+      background var(--dur-fast),
+      color var(--dur-fast);
+  }
+
+  .btn-sub:hover,
+  .btn-sub:focus-visible {
+    background: rgba(255, 240, 248, 0.13);
+    color: var(--text-primary);
+  }
+
+  .btn-sub svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-sub--listening {
+    border-color: var(--pink-400);
+    color: var(--pink-300);
+    animation: mic-pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes mic-pulse {
+    0%,
+    100% {
+      box-shadow: none;
+    }
+    50% {
+      box-shadow: 0 0 16px rgba(244, 114, 182, 0.4);
+    }
+  }
+}

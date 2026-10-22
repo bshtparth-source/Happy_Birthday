@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Production build output
+dist/
+
+# Local Dev Content Studio temporary staging
+.studio-tmp/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Vercel output
+.vercel/
+
+# OS metadata & Editor folders
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

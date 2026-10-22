@@ -1,0 +1,111 @@
+{
+  "recipient": {
+    "firstName": "Shridhika",
+    "fullName": "Shridhika Sinha",
+    "birthDate": "2015-10-21"
+  },
+  "sender": {
+    "name": "With all my love"
+  },
+  "hero": {
+    "eyebrow": "Wishing you a dreamy day",
+    "tagline": "Wishing the sweetest, dreamiest birthday to someone who makes every day magical.",
+    "photo": {
+      "id": "hero",
+      "alt": "Portrait of Shridhika",
+      "focus": {
+        "x": 50,
+        "y": 40
+      }
+    }
+  },
+  "candles": {
+    "wishMessage": "The universe heard your whisper, Shridhika ✨"
+  },
+  "scratchReward": {
+    "title": "Special Birthday Voucher 🎟️",
+    "message": "✨ A Day Full Of Your Favorite Treats + Unlimited Hugs & Wishes Forever! ✨"
+  },
+  "memories": [
+    {
+      "id": "memory-1",
+      "alt": "Golden hour smile",
+      "caption": "That golden hour glow ✨",
+      "tag": "Forever Favorite 🌸",
+      "focus": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "memory-2",
+      "alt": "Laughing together",
+      "caption": "Can't stop laughing with you 🎀",
+      "tag": "Our Happy Place 💕",
+      "focus": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "memory-3",
+      "alt": "Sweetest smile",
+      "caption": "Sweetest smile in the world 🌙",
+      "tag": "Precious Moments 🍓",
+      "focus": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "memory-4",
+      "alt": "Celebration time",
+      "caption": "To countless more chapters 🥂",
+      "tag": "Sweet 11 Chapter ✨",
+      "focus": {
+        "x": 50,
+        "y": 50
+      }
+    }
+  ],
+  "letter": {
+    "greeting": "My Dearest Shridhika,",
+    "paragraphs": [
+      "Happy 11th Birthday to the brightest star in our universe! 🌸",
+      "Watching you grow into such a kind, smart, and wonderful girl brings so much pride and joy to everyone who knows you. You have a special spark that turns everyday moments into magical memories.",
+      "May this new chapter bring you endless laughter, fun adventures, dreams that come true, and all the sweet treats in the world. Always remember how deeply loved and cherished you are."
+    ],
+    "closing": "Forever & Always, with all my love,"
+  },
+  "reasons": [
+    {
+      "icon": "ribbon",
+      "title": "Your Cute Little Smile",
+      "text": "The way your entire face lights up whenever you're happy is the sweetest sight in the world."
+    },
+    {
+      "icon": "flower",
+      "title": "Your Kind & Pure Heart",
+      "text": "You always care so gently about everyone around you with so much genuine warmth."
+    },
+    {
+      "icon": "sparkle",
+      "title": "Unfiltered Giggles",
+      "text": "Hearing you laugh out loud at silly things makes every ordinary day feel like a celebration."
+    },
+    {
+      "icon": "star",
+      "title": "Your Sparkling Energy",
+      "text": "You bring so much joy, wonder, and magic into our lives just by being yourself."
+    }
+  ],
+  "finale": {
+    "eyebrow": "Forever & always",
+    "message": "May your smile stay radiant, your dreams unfold gracefully, and every step of your journey be filled with happiness.",
+    "closingLine": "With all my heart"
+  },
+  "music": {
+    "file": "",
+    "title": "Birthday Melodies"
+  }
+}

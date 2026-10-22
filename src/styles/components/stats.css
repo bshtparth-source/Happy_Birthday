@@ -1,0 +1,67 @@
+@layer components {
+  .milestones-wrap {
+    width: 100%;
+    max-width: 580px;
+    margin-top: var(--space-8);
+  }
+
+  .milestones-wrap .section__eyebrow {
+    margin-block-end: var(--space-6);
+  }
+
+  .milestone-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .milestone-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .milestone-card {
+    background: var(--surface-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6) var(--space-3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .milestone-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .milestone-num {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    color: var(--gold-300);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .milestone-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .milestone-label svg {
+    width: 14px;
+    height: 14px;
+    color: var(--pink-400);
+  }
+}

@@ -1,0 +1,18 @@
+@layer components {
+  #finale-section {
+    gap: var(--space-6);
+  }
+
+  .finale__name {
+    color: var(--pink-400);
+  }
+
+  .finale__sender {
+    margin-top: var(--space-12);
+    font-family: var(--font-script);
+    font-size: clamp(1.6rem, 5vw, 2.3rem);
+    color: var(--text-secondary);
+    line-height: 1.4;
+    text-wrap: balance;
+  }
+}
