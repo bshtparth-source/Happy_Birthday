@@ -157,9 +157,40 @@ export function init(pillElement, config) {
     labelEl.textContent = config.music.title;
   }
 
+  let pausedForMic = false;
+
+  function duckForMic() {
+    if (playing && !muted) {
+      pausedForMic = true;
+      const ctx = getAudioContext();
+      if (masterGain && ctx && ctx.state !== 'closed') {
+        fadeOutGain(masterGain, 0.3);
+      }
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    }
+  }
+
+  function restoreFromMic() {
+    if (pausedForMic) {
+      pausedForMic = false;
+      if (playing && !muted) {
+        const ctx = getAudioContext();
+        if (masterGain && ctx && ctx.state !== 'closed') {
+          fadeInGain(masterGain, 0.45, 0.5);
+        }
+        schedule();
+      }
+    }
+  }
+
   return {
     start,
     toggle,
+    duckForMic,
+    restoreFromMic,
     reset() {
       // Retain music state across resets
     },

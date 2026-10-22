@@ -32,9 +32,11 @@
     }
   }
 
-  /* Natural CSS flame flicker animation */
+  /* Natural CSS flame flicker animation with breath-wind responsiveness */
   .candle-flame-group {
     transform-origin: bottom center;
+    --blow-skew: 0deg;
+    --blow-scale: 1;
     animation: flame-flicker 0.3s ease-in-out infinite alternate;
   }
 
@@ -55,15 +57,18 @@
 
   @keyframes flame-flicker {
     0% {
-      transform: scaleY(0.92) skewX(-2deg);
+      transform: skewX(calc(var(--blow-skew, 0deg) - 2deg))
+        scaleY(calc(var(--blow-scale, 1) * 0.92)) scaleX(var(--blow-scale, 1));
       opacity: 0.95;
     }
     50% {
-      transform: scaleY(1.08) skewX(2deg);
+      transform: skewX(calc(var(--blow-skew, 0deg) + 2deg))
+        scaleY(calc(var(--blow-scale, 1) * 1.08)) scaleX(var(--blow-scale, 1));
       opacity: 1;
     }
     100% {
-      transform: scaleY(0.96) skewX(-1deg);
+      transform: skewX(calc(var(--blow-skew, 0deg) - 1deg))
+        scaleY(calc(var(--blow-scale, 1) * 0.96)) scaleX(var(--blow-scale, 1));
       opacity: 0.98;
     }
   }
@@ -171,5 +176,25 @@
   .wish-sub {
     color: var(--pink-100);
     font-size: 1.05rem;
+  }
+
+  /* Dev / QA debug overlay for microphone tuning (?debug=1) */
+  .mic-debug-overlay {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: 9999;
+    background: rgba(17, 2, 29, 0.94);
+    border: 1px solid rgba(254, 240, 138, 0.45);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #fff5fa;
+    pointer-events: none;
+    max-width: 340px;
+    backdrop-filter: blur(8px);
   }
 }

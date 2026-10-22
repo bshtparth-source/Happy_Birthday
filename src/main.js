@@ -72,10 +72,32 @@ function revealSections() {
   modules.stats = initStats(heroSection, content);
 
   const cakeSection = document.getElementById('cake-section');
-  modules.cake = initCake(cakeSection, content);
+  modules.cake = initCake(cakeSection, content, {
+    onRelight() {
+      if (modules.cakeMic?.reset) {
+        modules.cakeMic.reset();
+      }
+    },
+  });
+
   modules.cakeMic = initCakeMic(cakeSection, content, {
     onBlow() {
       modules.cake.blow();
+    },
+    onBlowStrength(strength) {
+      if (modules.cake?.setBlowStrength) {
+        modules.cake.setBlowStrength(strength);
+      }
+    },
+    onMicStart() {
+      if (modules.music?.duckForMic) {
+        modules.music.duckForMic();
+      }
+    },
+    onMicStop() {
+      if (modules.music?.restoreFromMic) {
+        modules.music.restoreFromMic();
+      }
     },
   });
 

@@ -6,9 +6,10 @@ import { setText } from '../utils/dom.js';
  * Initializes the 3D SVG luxury cake, candles, and blow/relight sequencing.
  * @param {HTMLElement} root - The #cake-section container
  * @param {object} config - Active configuration
- * @returns {{ blow: () => void, relight: () => void, reset: () => void, destroy: () => void }}
+ * @param {{ onRelight?: () => void }} [callbacks]
+ * @returns {{ blow: () => void, relight: () => void, setBlowStrength: (strength: number) => void, reset: () => void, destroy: () => void }}
  */
-export function init(root, config) {
+export function init(root, config, { onRelight } = {}) {
   if (!root) return { blow: () => {}, relight: () => {}, reset: () => {}, destroy: () => {} };
 
   const cakeSvgWrap = root.querySelector('#cake-svg-wrap');
@@ -184,15 +185,41 @@ export function init(root, config) {
   // Populate wish message
   setText(wishSubText, config.candles?.wishMessage || 'The universe heard your whisper ✨');
 
+  let isExtinguished = false;
+
+  function setBlowStrength(strength) {
+    if (isExtinguished) return;
+    const clamped = Math.max(0, Math.min(1, strength));
+    for (let i = 0; i < candleCount; i++) {
+      const flame = cakeSvgWrap.querySelector(`#flame-group-${i}`);
+      if (flame) {
+        if (clamped > 0.05) {
+          const skew = -9 * clamped + (i % 2 === 0 ? -4 : 3) * clamped;
+          const scale = 1 - clamped * 0.35;
+          flame.style.setProperty('--blow-skew', `${skew.toFixed(1)}deg`);
+          flame.style.setProperty('--blow-scale', scale.toFixed(2));
+        } else {
+          flame.style.removeProperty('--blow-skew');
+          flame.style.removeProperty('--blow-scale');
+        }
+      }
+    }
+  }
+
   function blow() {
+    if (isExtinguished) return;
+    isExtinguished = true;
+    setBlowStrength(0);
+
     for (let i = 0; i < candleCount; i++) {
       const flame = cakeSvgWrap.querySelector(`#flame-group-${i}`);
       const smk = cakeSvgWrap.querySelector(`#smoke-${i}`);
       if (flame) {
+        const stagger = i * 38 + (i % 3) * 12;
         setTimeout(() => {
           flame.classList.add('flame-extinguished');
           if (smk) smk.classList.add('smoke-puff');
-        }, i * 35);
+        }, stagger);
       }
     }
 
@@ -212,15 +239,22 @@ export function init(root, config) {
         blowControls.style.display = 'none';
         wishMsg.classList.add('wish-msg--visible');
       },
-      candleCount * 35 + 200
+      candleCount * 38 + 220
     );
   }
 
   function relight() {
+    isExtinguished = false;
+    setBlowStrength(0);
+
     for (let i = 0; i < candleCount; i++) {
       const flame = cakeSvgWrap.querySelector(`#flame-group-${i}`);
       const smk = cakeSvgWrap.querySelector(`#smoke-${i}`);
-      if (flame) flame.classList.remove('flame-extinguished');
+      if (flame) {
+        flame.classList.remove('flame-extinguished');
+        flame.style.removeProperty('--blow-skew');
+        flame.style.removeProperty('--blow-scale');
+      }
       if (smk) smk.classList.remove('smoke-puff');
     }
 
@@ -229,6 +263,7 @@ export function init(root, config) {
 
     blowControls.style.display = 'flex';
     wishMsg.classList.remove('wish-msg--visible');
+    if (onRelight) onRelight();
   }
 
   blowBtn.addEventListener('click', blow);
@@ -237,6 +272,7 @@ export function init(root, config) {
   return {
     blow,
     relight,
+    setBlowStrength,
     reset() {
       relight();
     },

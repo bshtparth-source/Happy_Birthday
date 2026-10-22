@@ -11,6 +11,7 @@
     "studio": "vite --open /studio/",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "node --test tests/mic-blow.test.js",
     "lint": "eslint src studio tools",
     "format": "prettier --write src studio tools index.html"
   },
